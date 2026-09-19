@@ -21,3 +21,19 @@ module "ecr" {
 
   repository_name = "banking-dev-backend"
 }
+
+
+module "rds" {
+  source = "../../modules/rds"
+
+  db_name     = "banking"
+  db_username = "banking_user"
+  db_password = var.db_password
+
+  db_instance_class = "db.t3.micro"
+
+  private_subnet_ids = module.vpc.private_subnet_ids
+  vpc_id             = module.vpc.vpc_id
+
+  environment = "dev"
+}

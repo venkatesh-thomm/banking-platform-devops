@@ -41,3 +41,29 @@ output "external_secrets_role_arn" {
   description = "External Secrets IAM role ARN"
   value       = module.eks.external_secrets_role_arn
 }
+
+output "load_balancer_controller_role_arn" {
+  description = "AWS Load Balancer Controller IAM role ARN"
+  value       = module.load_balancer_controller.role_arn
+}
+
+output "load_balancer_controller_policy_arn" {
+  description = "AWS Load Balancer Controller IAM policy ARN"
+  value       = module.load_balancer_controller.policy_arn
+}
+
+
+output "acm_certificate_arn" {
+  description = "ACM certificate ARN"
+  value       = module.acm.certificate_arn
+}
+
+output "acm_domain_name" {
+  description = "ACM certificate domain name"
+  value       = module.acm.domain_name
+}
+
+output "acm_domain_validation_options" {
+  description = "ACM DNS validation records"
+  value       = module.acm.domain_validation_options
+}

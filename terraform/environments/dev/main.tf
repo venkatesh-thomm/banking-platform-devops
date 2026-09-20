@@ -37,3 +37,26 @@ module "rds" {
 
   environment = "dev"
 }
+
+
+module "load_balancer_controller" {
+  source = "../../modules/eks/load-balancer-controller"
+
+  cluster_name = module.eks.cluster_name
+  environment  = "dev"
+
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_provider_url = replace(
+    module.eks.oidc_provider_url,
+    "https://",
+    ""
+  )
+}
+
+
+module "acm" {
+  source = "../../modules/acm"
+
+  domain_name = "api.venkatesh.fun"
+  environment = "dev"
+}

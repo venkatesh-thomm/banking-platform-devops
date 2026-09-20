@@ -18,3 +18,13 @@ output "external_secrets_role_arn" {
   description = "IAM role ARN for External Secrets Operator"
   value       = aws_iam_role.external_secrets.arn
 }
+
+output "oidc_provider_arn" {
+  description = "EKS OIDC provider ARN"
+  value       = aws_iam_openid_connect_provider.eks.arn
+}
+
+output "oidc_provider_url" {
+  description = "EKS OIDC provider URL"
+  value       = aws_iam_openid_connect_provider.eks.url
+}

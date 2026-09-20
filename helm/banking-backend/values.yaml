@@ -16,6 +16,8 @@ database:
   port: "5432"
   secretName: "banking-db-secret"
 
+ingress:
+  enabled: true
 
 resources:
   requests:

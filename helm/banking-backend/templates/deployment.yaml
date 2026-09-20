@@ -23,6 +23,35 @@ spec:
           ports:
             - containerPort: {{ .Values.containerPort }}
 
+
+          env:
+            - name: DB_HOST
+              value: {{ .Values.database.host | quote }}
+
+            - name: DB_PORT
+              value: {{ .Values.database.port | quote }}
+
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: database
+
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: username
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: password
+
+            - name: DATABASE_URL
+              value: "postgresql://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+          
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 

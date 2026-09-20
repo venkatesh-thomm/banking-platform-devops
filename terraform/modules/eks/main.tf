@@ -120,3 +120,70 @@ resource "aws_eks_node_group" "this" {
     Project     = "banking-platform"
   }
 }
+
+
+data "tls_certificate" "eks" {
+  url = aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "eks" {
+  client_id_list = [
+    "sts.amazonaws.com"
+  ]
+
+  thumbprint_list = [
+    data.tls_certificate.eks.certificates[0].sha1_fingerprint
+  ]
+
+  url = aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_policy" "external_secrets" {
+  name        = "${var.cluster_name}-external-secrets"
+  description = "Allow External Secrets Operator to read banking database secret"
+
+  policy = file("${path.module}/external-secrets-policy.json")
+}
+
+data "aws_iam_policy_document" "external_secrets_assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.eks.arn]
+    }
+
+    actions = [
+      "sts:AssumeRoleWithWebIdentity"
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
+
+      values = [
+        "system:serviceaccount:external-secrets:external-secrets"
+      ]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:aud"
+
+      values = [
+        "sts.amazonaws.com"
+      ]
+    }
+  }
+}
+
+resource "aws_iam_role" "external_secrets" {
+  name               = "${var.cluster_name}-external-secrets"
+  assume_role_policy = data.aws_iam_policy_document.external_secrets_assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "external_secrets" {
+  role       = aws_iam_role.external_secrets.name
+  policy_arn = aws_iam_policy.external_secrets.arn
+}

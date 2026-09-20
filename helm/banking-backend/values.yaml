@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: 210006515453.dkr.ecr.ap-south-1.amazonaws.com/banking-dev-backend
+  repository: 210006515453.dkr.ecr.us-east-1.amazonaws.com/banking-dev-backend
   tag: "1.0.0"
   pullPolicy: IfNotPresent
 
@@ -10,6 +10,12 @@ service:
   port: 8000
 
 containerPort: 8000
+
+database:
+  host: "banking-dev-postgres.cip2cy2ayqpu.us-east-1.rds.amazonaws.com"
+  port: "5432"
+  secretName: "banking-db-secret"
+
 
 resources:
   requests:

@@ -1,0 +1,28 @@
+replicaCount: 2
+
+image:
+  repository: 210006515453.dkr.ecr.us-east-1.amazonaws.com/banking-qa-backend
+  tag: "feb6c8facda60d31bd542b9368edff1cd1e263b4"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+containerPort: 8000
+
+database:
+  host: "banking-qa-postgres.cip2cy2ayqpu.us-east-1.rds.amazonaws.com"
+  port: "5432"
+  secretName: "banking-db-secret"
+
+ingress:
+  enabled: true
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

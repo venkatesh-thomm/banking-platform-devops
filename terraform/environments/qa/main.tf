@@ -56,7 +56,10 @@ module "load_balancer_controller" {
   cluster_name = module.eks.cluster_name
   environment  = "qa"
 
+  vpc_id = module.vpc.vpc_id
+
   oidc_provider_arn = module.eks.oidc_provider_arn
+
   oidc_provider_url = replace(
     module.eks.oidc_provider_url,
     "https://",
@@ -118,19 +121,3 @@ module "github_actions" {
   environment = "qa"
 }
 
-module "load_balancer_controller" {
-  source = "../../modules/eks/load-balancer-controller"
-
-  cluster_name = module.eks.cluster_name
-  environment  = "qa"
-
-  vpc_id = module.vpc.vpc_id
-
-  oidc_provider_arn = module.eks.oidc_provider_arn
-
-  oidc_provider_url = replace(
-    module.eks.oidc_provider_url,
-    "https://",
-    ""
-  )
-}

@@ -67,3 +67,25 @@ output "acm_domain_validation_options" {
   description = "ACM DNS validation records"
   value       = module.acm.domain_validation_options
 }
+
+
+output "waf_web_acl_arn" {
+  description = "WAF Web ACL ARN"
+  value       = module.waf.web_acl_arn
+}
+
+
+output "cloudfront_distribution_id" {
+  description = "CloudFront distribution ID"
+  value       = module.cloudfront.distribution_id
+}
+
+output "cloudfront_domain_name" {
+  description = "CloudFront domain name"
+  value       = module.cloudfront.distribution_domain_name
+}
+
+output "cloudfront_arn" {
+  description = "CloudFront distribution ARN"
+  value       = module.cloudfront.distribution_arn
+}

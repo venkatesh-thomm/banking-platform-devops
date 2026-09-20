@@ -60,3 +60,22 @@ module "acm" {
   domain_name = "api.venkatesh.fun"
   environment = "dev"
 }
+
+
+module "waf" {
+  source = "../../modules/waf"
+
+  name        = "banking-dev-waf"
+  environment = "dev"
+}
+
+module "cloudfront" {
+  source = "../../modules/cloudfront"
+
+  name        = "banking-dev-cloudfront"
+  environment = "dev"
+
+  alb_dns_name = "k8s-default-bankingb-8180975c90-604770014.us-east-1.elb.amazonaws.com"
+
+  web_acl_arn = module.waf.web_acl_arn
+}

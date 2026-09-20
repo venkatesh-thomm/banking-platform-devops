@@ -79,3 +79,30 @@ module "cloudfront" {
 
   web_acl_arn = module.waf.web_acl_arn
 }
+
+resource "aws_iam_openid_connect_provider" "github" {
+  url = "https://token.actions.githubusercontent.com"
+
+  client_id_list = [
+    "sts.amazonaws.com"
+  ]
+
+  tags = {
+    Project     = "banking-platform"
+    Environment = "dev"
+  }
+}
+
+module "github_actions" {
+  source = "../../modules/github-actions"
+
+  github_org  = "venkatesh-thomm"
+  github_repo = "banking-platform-app"
+
+  github_org_id  = "46835167"
+  github_repo_id = "1378140036"
+
+  ecr_repository_arn = module.ecr.repository_arn
+
+  environment = "dev"
+}

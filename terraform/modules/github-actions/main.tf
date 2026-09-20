@@ -1,3 +1,4 @@
+
 data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "github_actions_assume_role" {
@@ -6,6 +7,7 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
 
     principals {
       type = "Federated"
+
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
       ]
@@ -29,7 +31,7 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
       variable = "token.actions.githubusercontent.com:sub"
 
       values = [
-        "repo:${var.github_org}@${var.github_org_id}/${var.github_repo}@${var.github_repo_id}:ref:refs/heads/dev"
+        "repo:${var.github_org}@${var.github_org_id}/${var.github_repo}@${var.github_repo_id}:environment:${var.environment}"
       ]
     }
   }
@@ -81,3 +83,4 @@ resource "aws_iam_role_policy" "ecr" {
 
   policy = data.aws_iam_policy_document.ecr.json
 }
+

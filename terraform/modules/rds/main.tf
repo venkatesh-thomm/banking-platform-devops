@@ -74,3 +74,25 @@ resource "aws_db_instance" "this" {
     Project     = "banking-platform"
   }
 }
+
+
+resource "aws_secretsmanager_secret" "database" {
+  name        = "banking/${var.environment}/database"
+  description = "Database credentials for banking ${var.environment} environment"
+
+  tags = {
+    Environment = var.environment
+    Project     = "banking-platform"
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "database" {
+  secret_id = aws_secretsmanager_secret.database.id
+
+  secret_string = jsonencode({
+    username = var.db_username
+    password = var.db_password
+    database = var.db_name
+  })
+}
+

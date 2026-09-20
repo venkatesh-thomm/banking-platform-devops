@@ -28,3 +28,5 @@ output "oidc_provider_url" {
   description = "EKS OIDC provider URL"
   value       = aws_iam_openid_connect_provider.eks.url
 }
+
+

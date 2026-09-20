@@ -1,3 +1,4 @@
+
 variable "github_org" {
   type        = string
   description = "GitHub username or organization"
@@ -27,3 +28,4 @@ variable "github_repo_id" {
   type        = string
   description = "GitHub repository ID"
 }
+

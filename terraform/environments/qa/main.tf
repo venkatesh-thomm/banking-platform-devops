@@ -93,7 +93,7 @@ module "cloudfront" {
 
   web_acl_arn = module.waf.web_acl_arn
 } */
-/* 
+
 resource "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
 
@@ -106,7 +106,8 @@ resource "aws_iam_openid_connect_provider" "github" {
     Environment = "qa"
   }
 }
- */
+
+
 module "github_actions" {
   source = "../../modules/github-actions"
 
@@ -121,3 +122,17 @@ module "github_actions" {
   environment = "qa"
 }
 
+
+module "argocd" {
+  source = "../../modules/argocd"
+
+  namespace     = "argocd"
+  chart_version = "9.1.2"
+}
+
+
+module "external_secrets" {
+  source = "../../modules/external-secrets"
+
+  iam_role_arn = module.eks.external_secrets_role_arn
+}

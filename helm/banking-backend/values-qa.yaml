@@ -15,6 +15,7 @@ database:
   host: "banking-qa-postgres.cip2cy2ayqpu.us-east-1.rds.amazonaws.com"
   port: "5432"
   secretName: "banking-db-secret"
+  secretKey: "banking/qa/database"
 
 ingress:
   enabled: true

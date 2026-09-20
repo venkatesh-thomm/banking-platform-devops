@@ -1,25 +1,25 @@
 module "vpc" {
   source = "../../modules/vpc"
 
-  vpc_cidr = "10.0.0.0/16"
+  vpc_cidr = "10.1.0.0/16"
 
   public_subnet_cidrs = [
-    "10.0.1.0/24",
-    "10.0.2.0/24"
+    "10.1.1.0/24",
+    "10.1.2.0/24"
   ]
 
   private_subnet_cidrs = [
-    "10.0.10.0/24",
-    "10.0.11.0/24"
+    "10.1.10.0/24",
+    "10.1.11.0/24"
   ]
 
-  environment = "dev"
+  environment = "qa"
 }
 
 module "eks" {
   source = "../../modules/eks"
 
-  cluster_name       = "banking-dev-eks"
+  cluster_name       = "banking-qa-eks"
   kubernetes_version = "1.34"
 
   vpc_id             = module.vpc.vpc_id
@@ -30,7 +30,7 @@ module "eks" {
 module "ecr" {
   source = "../../modules/ecr"
 
-  repository_name = "banking-dev-backend"
+  repository_name = "banking-qa-backend"
 }
 
 
@@ -46,7 +46,7 @@ module "rds" {
   private_subnet_ids = module.vpc.private_subnet_ids
   vpc_id             = module.vpc.vpc_id
 
-  environment = "dev"
+  environment = "qa"
 }
 
 
@@ -54,12 +54,9 @@ module "load_balancer_controller" {
   source = "../../modules/eks/load-balancer-controller"
 
   cluster_name = module.eks.cluster_name
-  environment  = "dev"
-
-  vpc_id = module.vpc.vpc_id
+  environment  = "qa"
 
   oidc_provider_arn = module.eks.oidc_provider_arn
-
   oidc_provider_url = replace(
     module.eks.oidc_provider_url,
     "https://",
@@ -67,33 +64,33 @@ module "load_balancer_controller" {
   )
 }
 
-
+/* 
 module "acm" {
   source = "../../modules/acm"
 
   domain_name = "api.venkatesh.fun"
-  environment = "dev"
-}
+  environment = "qa"
+} */
 
 
 module "waf" {
   source = "../../modules/waf"
 
-  name        = "banking-dev-waf"
-  environment = "dev"
+  name        = "banking-qa-waf"
+  environment = "qa"
 }
-
+/* 
 module "cloudfront" {
   source = "../../modules/cloudfront"
 
-  name        = "banking-dev-cloudfront"
-  environment = "dev"
+  name        = "banking-qa-cloudfront"
+  environment = "qa"
 
   alb_dns_name = "k8s-default-bankingb-8180975c90-604770014.us-east-1.elb.amazonaws.com"
 
   web_acl_arn = module.waf.web_acl_arn
-}
-
+} */
+/* 
 resource "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
 
@@ -103,10 +100,10 @@ resource "aws_iam_openid_connect_provider" "github" {
 
   tags = {
     Project     = "banking-platform"
-    Environment = "dev"
+    Environment = "qa"
   }
 }
-
+ */
 module "github_actions" {
   source = "../../modules/github-actions"
 
@@ -118,5 +115,22 @@ module "github_actions" {
 
   ecr_repository_arn = module.ecr.repository_arn
 
-  environment = "dev"
+  environment = "qa"
+}
+
+module "load_balancer_controller" {
+  source = "../../modules/eks/load-balancer-controller"
+
+  cluster_name = module.eks.cluster_name
+  environment  = "qa"
+
+  vpc_id = module.vpc.vpc_id
+
+  oidc_provider_arn = module.eks.oidc_provider_arn
+
+  oidc_provider_url = replace(
+    module.eks.oidc_provider_url,
+    "https://",
+    ""
+  )
 }

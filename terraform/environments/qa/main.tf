@@ -16,123 +16,123 @@ module "vpc" {
   environment = "qa"
 }
 
-module "eks" {
-  source = "../../modules/eks"
+# module "eks" {
+#   source = "../../modules/eks"
 
-  cluster_name       = "banking-qa-eks"
-  kubernetes_version = "1.34"
+#   cluster_name       = "banking-qa-eks"
+#   kubernetes_version = "1.34"
 
-  vpc_id             = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnet_ids
-}
-
-
-module "ecr" {
-  source = "../../modules/ecr"
-
-  repository_name = "banking-qa-backend"
-}
+#   vpc_id             = module.vpc.vpc_id
+#   private_subnet_ids = module.vpc.private_subnet_ids
+# }
 
 
-module "rds" {
-  source = "../../modules/rds"
+# module "ecr" {
+#   source = "../../modules/ecr"
 
-  db_name     = "banking"
-  db_username = "banking_user"
-  db_password = var.db_password
-
-  db_instance_class = "db.t3.micro"
-
-  private_subnet_ids = module.vpc.private_subnet_ids
-  vpc_id             = module.vpc.vpc_id
-
-  environment = "qa"
-}
+#   repository_name = "banking-qa-backend"
+# }
 
 
-module "load_balancer_controller" {
-  source = "../../modules/eks/load-balancer-controller"
+# module "rds" {
+#   source = "../../modules/rds"
 
-  cluster_name = module.eks.cluster_name
-  environment  = "qa"
+#   db_name     = "banking"
+#   db_username = "banking_user"
+#   db_password = var.db_password
 
-  vpc_id = module.vpc.vpc_id
+#   db_instance_class = "db.t3.micro"
 
-  oidc_provider_arn = module.eks.oidc_provider_arn
+#   private_subnet_ids = module.vpc.private_subnet_ids
+#   vpc_id             = module.vpc.vpc_id
 
-  oidc_provider_url = replace(
-    module.eks.oidc_provider_url,
-    "https://",
-    ""
-  )
-}
-
-/* 
-module "acm" {
-  source = "../../modules/acm"
-
-  domain_name = "api.venkatesh.fun"
-  environment = "qa"
-} */
+#   environment = "qa"
+# }
 
 
-module "waf" {
-  source = "../../modules/waf"
+# module "load_balancer_controller" {
+#   source = "../../modules/eks/load-balancer-controller"
 
-  name        = "banking-qa-waf"
-  environment = "qa"
-}
-/* 
-module "cloudfront" {
-  source = "../../modules/cloudfront"
+#   cluster_name = module.eks.cluster_name
+#   environment  = "qa"
 
-  name        = "banking-qa-cloudfront"
-  environment = "qa"
+#   vpc_id = module.vpc.vpc_id
 
-  alb_dns_name = "k8s-default-bankingb-8180975c90-604770014.us-east-1.elb.amazonaws.com"
+#   oidc_provider_arn = module.eks.oidc_provider_arn
 
-  web_acl_arn = module.waf.web_acl_arn
-} */
+#   oidc_provider_url = replace(
+#     module.eks.oidc_provider_url,
+#     "https://",
+#     ""
+#   )
+# }
 
-resource "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
+# /* 
+# module "acm" {
+#   source = "../../modules/acm"
 
-  client_id_list = [
-    "sts.amazonaws.com"
-  ]
-
-  tags = {
-    Project     = "banking-platform"
-    Environment = "qa"
-  }
-}
+#   domain_name = "api.venkatesh.fun"
+#   environment = "qa"
+# } */
 
 
-module "github_actions" {
-  source = "../../modules/github-actions"
+# module "waf" {
+#   source = "../../modules/waf"
 
-  github_org  = "venkatesh-thomm"
-  github_repo = "banking-platform-app"
+#   name        = "banking-qa-waf"
+#   environment = "qa"
+# }
+# /* 
+# module "cloudfront" {
+#   source = "../../modules/cloudfront"
 
-  github_org_id  = "46835167"
-  github_repo_id = "1378140036"
+#   name        = "banking-qa-cloudfront"
+#   environment = "qa"
 
-  ecr_repository_arn = module.ecr.repository_arn
+#   alb_dns_name = "k8s-default-bankingb-8180975c90-604770014.us-east-1.elb.amazonaws.com"
 
-  environment = "qa"
-}
+#   web_acl_arn = module.waf.web_acl_arn
+# } */
+
+# resource "aws_iam_openid_connect_provider" "github" {
+#   url = "https://token.actions.githubusercontent.com"
+
+#   client_id_list = [
+#     "sts.amazonaws.com"
+#   ]
+
+#   tags = {
+#     Project     = "banking-platform"
+#     Environment = "qa"
+#   }
+# }
 
 
-module "argocd" {
-  source = "../../modules/argocd"
+# module "github_actions" {
+#   source = "../../modules/github-actions"
 
-  namespace     = "argocd"
-  chart_version = "9.1.2"
-}
+#   github_org  = "venkatesh-thomm"
+#   github_repo = "banking-platform-app"
+
+#   github_org_id  = "46835167"
+#   github_repo_id = "1378140036"
+
+#   ecr_repository_arn = module.ecr.repository_arn
+
+#   environment = "qa"
+# }
 
 
-module "external_secrets" {
-  source = "../../modules/external-secrets"
+# module "argocd" {
+#   source = "../../modules/argocd"
 
-  iam_role_arn = module.eks.external_secrets_role_arn
-}
+#   namespace     = "argocd"
+#   chart_version = "9.1.2"
+# }
+
+
+# module "external_secrets" {
+#   source = "../../modules/external-secrets"
+
+#   iam_role_arn = module.eks.external_secrets_role_arn
+# }

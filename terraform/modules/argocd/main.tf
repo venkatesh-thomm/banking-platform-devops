@@ -61,7 +61,8 @@ resource "kubernetes_manifest" "banking_backend" {
         }
 
         syncOptions = [
-          "CreateNamespace=true"
+          "CreateNamespace=true",
+          "SkipDryRunOnMissingResource=true"
         ]
       }
     }
@@ -71,3 +72,4 @@ resource "kubernetes_manifest" "banking_backend" {
     helm_release.argocd
   ]
 }
+

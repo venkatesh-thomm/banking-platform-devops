@@ -49,7 +49,7 @@ resource "aws_eks_cluster" "this" {
 
   tags = {
     Name        = var.cluster_name
-    Environment = "dev"
+    Environment = var.environment
     Project     = "banking-platform"
   }
 }
@@ -138,11 +138,30 @@ resource "aws_iam_openid_connect_provider" "eks" {
   url = aws_eks_cluster.this.identity[0].oidc[0].issuer
 }
 
+data "aws_iam_policy_document" "external_secrets" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
+    ]
+
+    resources = [
+      "arn:aws:secretsmanager:us-east-1:*:secret:banking/${var.environment}/database-*"
+    ]
+  }
+}
+
 resource "aws_iam_policy" "external_secrets" {
   name        = "${var.cluster_name}-external-secrets"
   description = "Allow External Secrets Operator to read banking database secret"
+  policy      = data.aws_iam_policy_document.external_secrets.json
 
-  policy = file("${path.module}/external-secrets-policy.json")
+  tags = {
+    Project     = "banking-platform"
+    Environment = var.environment
+  }
 }
 
 data "aws_iam_policy_document" "external_secrets_assume_role" {

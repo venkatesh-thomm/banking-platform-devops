@@ -16,56 +16,58 @@ module "vpc" {
   environment = "qa"
 }
 
-# module "eks" {
-#   source = "../../modules/eks"
+module "eks" {
+  source = "../../modules/eks"
 
-#   cluster_name       = "banking-qa-eks"
-#   kubernetes_version = "1.34"
+  cluster_name       = "banking-qa-eks"
+  kubernetes_version = "1.34"
 
-#   vpc_id             = module.vpc.vpc_id
-#   private_subnet_ids = module.vpc.private_subnet_ids
-# }
-
-
-# module "ecr" {
-#   source = "../../modules/ecr"
-
-#   repository_name = "banking-qa-backend"
-# }
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnet_ids
+  environment        = "qa"
+}
 
 
-# module "rds" {
-#   source = "../../modules/rds"
+module "ecr" {
+  source = "../../modules/ecr"
 
-#   db_name     = "banking"
-#   db_username = "banking_user"
-#   db_password = var.db_password
-
-#   db_instance_class = "db.t3.micro"
-
-#   private_subnet_ids = module.vpc.private_subnet_ids
-#   vpc_id             = module.vpc.vpc_id
-
-#   environment = "qa"
-# }
+  repository_name = "banking-qa-backend"
+  environment     = "qa"
+}
 
 
-# module "load_balancer_controller" {
-#   source = "../../modules/eks/load-balancer-controller"
+module "rds" {
+  source = "../../modules/rds"
 
-#   cluster_name = module.eks.cluster_name
-#   environment  = "qa"
+  db_name     = "banking"
+  db_username = "banking_user"
+  db_password = var.db_password
 
-#   vpc_id = module.vpc.vpc_id
+  db_instance_class = "db.t3.micro"
 
-#   oidc_provider_arn = module.eks.oidc_provider_arn
+  private_subnet_ids = module.vpc.private_subnet_ids
+  vpc_id             = module.vpc.vpc_id
 
-#   oidc_provider_url = replace(
-#     module.eks.oidc_provider_url,
-#     "https://",
-#     ""
-#   )
-# }
+  environment = "qa"
+}
+
+
+module "load_balancer_controller" {
+  source = "../../modules/eks/load-balancer-controller"
+
+  cluster_name = module.eks.cluster_name
+  environment  = "qa"
+
+  vpc_id = module.vpc.vpc_id
+
+  oidc_provider_arn = module.eks.oidc_provider_arn
+
+  oidc_provider_url = replace(
+    module.eks.oidc_provider_url,
+    "https://",
+    ""
+  )
+}
 
 # /* 
 # module "acm" {
@@ -123,16 +125,16 @@ module "vpc" {
 # }
 
 
-# module "argocd" {
-#   source = "../../modules/argocd"
+module "argocd" {
+  source = "../../modules/argocd"
 
-#   namespace     = "argocd"
-#   chart_version = "9.1.2"
-# }
+  namespace     = "argocd"
+  chart_version = "9.1.2"
+}
 
 
-# module "external_secrets" {
-#   source = "../../modules/external-secrets"
+module "external_secrets" {
+  source = "../../modules/external-secrets"
 
-#   iam_role_arn = module.eks.external_secrets_role_arn
-# }
+  iam_role_arn = module.eks.external_secrets_role_arn
+}

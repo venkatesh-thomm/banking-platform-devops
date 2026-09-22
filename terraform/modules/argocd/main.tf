@@ -32,6 +32,10 @@ resource "kubernetes_manifest" "banking_backend" {
     metadata = {
       name      = "banking-backend-qa"
       namespace = var.namespace
+
+      annotations = {
+        "argocd.argoproj.io/refresh" = "hard"
+      }
     }
 
     spec = {

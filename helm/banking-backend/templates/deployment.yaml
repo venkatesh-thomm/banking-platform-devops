@@ -1,9 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: {{ include "banking-backend.fullname" . }}
+
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{- if .Values.autoscaling.enabled }}
+    {{ .Values.autoscaling.minReplicas }}
+  {{- else }}
+    {{ .Values.replicaCount }}
+  {{- end }}
 
   selector:
     matchLabels:
@@ -17,12 +23,12 @@ spec:
     spec:
       containers:
         - name: banking-backend
+
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           ports:
             - containerPort: {{ .Values.containerPort }}
-
 
           env:
             - name: DB_HOST
@@ -51,7 +57,7 @@ spec:
 
             - name: DATABASE_URL
               value: "postgresql://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
-          
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 

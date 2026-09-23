@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "../../modules/vpc"
+  source = "../../../modules/vpc"
 
   vpc_cidr = "10.1.0.0/16"
 
@@ -17,7 +17,7 @@ module "vpc" {
 }
 
 module "eks" {
-  source = "../../modules/eks"
+  source = "../../../modules/eks"
 
   cluster_name       = "banking-qa-eks"
   kubernetes_version = "1.34"
@@ -30,7 +30,7 @@ module "eks" {
 
 
 module "ecr" {
-  source = "../../modules/ecr"
+  source = "../../../modules/ecr"
 
   repository_name = "banking-qa-backend"
   environment     = "qa"
@@ -39,7 +39,7 @@ module "ecr" {
 
 
 module "rds" {
-  source = "../../modules/rds"
+  source = "../../../modules/rds"
 
   db_name     = "banking"
   db_username = "banking_user"
@@ -56,7 +56,7 @@ module "rds" {
 
 
 module "load_balancer_controller" {
-  source = "../../modules/eks/load-balancer-controller"
+  source = "../../../modules/eks/load-balancer-controller"
 
   cluster_name = module.eks.cluster_name
   environment  = "qa"
@@ -99,56 +99,3 @@ module "load_balancer_controller" {
 
 #   web_acl_arn = module.waf.web_acl_arn
 # } */
-
-resource "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
-
-  client_id_list = [
-    "sts.amazonaws.com"
-  ]
-
-  tags = {
-    Project     = "banking-platform"
-    Environment = "qa"
-  }
-}
-
-
-module "github_actions" {
-  source = "../../modules/github-actions"
-
-  github_org  = "venkatesh-thomm"
-  github_repo = "banking-platform-app"
-
-  github_org_id  = "46835167"
-  github_repo_id = "1378140036"
-
-  ecr_repository_arn = module.ecr.repository_arn
-
-  environment = "qa"
-}
-
-
-module "argocd" {
-  source = "../../modules/argocd"
-
-  namespace     = "argocd"
-  chart_version = "9.1.2"
-  depends_on = [
-    module.eks,
-    module.external_secrets,
-    module.load_balancer_controller
-  ]
-}
-
-
-module "external_secrets" {
-  source = "../../modules/external-secrets"
-
-  iam_role_arn = module.eks.external_secrets_role_arn
-
-  depends_on = [
-    module.eks
-  ]
-
-}

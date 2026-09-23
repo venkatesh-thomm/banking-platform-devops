@@ -25,6 +25,7 @@ module "eks" {
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
   environment        = "qa"
+  depends_on         = [module.vpc]
 }
 
 
@@ -33,6 +34,7 @@ module "ecr" {
 
   repository_name = "banking-qa-backend"
   environment     = "qa"
+  depends_on      = [module.vpc]
 }
 
 
@@ -49,6 +51,7 @@ module "rds" {
   vpc_id             = module.vpc.vpc_id
 
   environment = "qa"
+  depends_on  = [module.vpc]
 }
 
 
@@ -67,6 +70,7 @@ module "load_balancer_controller" {
     "https://",
     ""
   )
+  depends_on = [module.eks]
 }
 
 # /* 
@@ -130,6 +134,11 @@ module "argocd" {
 
   namespace     = "argocd"
   chart_version = "9.1.2"
+  depends_on = [
+    module.eks,
+    module.external_secrets,
+    module.load_balancer_controller
+  ]
 }
 
 
@@ -137,4 +146,9 @@ module "external_secrets" {
   source = "../../modules/external-secrets"
 
   iam_role_arn = module.eks.external_secrets_role_arn
+
+  depends_on = [
+    module.eks
+  ]
+
 }

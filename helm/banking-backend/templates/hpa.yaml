@@ -1,10 +1,13 @@
 {{- if .Values.autoscaling.enabled }}
+
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
+
 metadata:
   name: {{ include "banking-backend.fullname" . }}
   labels:
     {{- include "banking-backend.labels" . | nindent 4 }}
+
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -28,3 +31,5 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+
+{{- end }}

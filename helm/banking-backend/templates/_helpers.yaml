@@ -15,3 +15,13 @@ Create a default fully qualified app name.
 {{- include "banking-backend.name" . }}
 {{- end }}
 {{- end }}
+
+{{/*
+Common labels.
+*/}}
+{{- define "banking-backend.labels" -}}
+helm.sh/chart: {{ include "banking-backend.name" . }}
+app.kubernetes.io/name: {{ include "banking-backend.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}

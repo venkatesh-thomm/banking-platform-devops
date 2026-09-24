@@ -10,6 +10,9 @@ spec:
     repoURL: https://github.com/venkatesh-thomm/banking-platform-devops.git
     targetRevision: dev
     path: helm/banking-backend
+    helm:
+      valueFiles:
+        - values-qa.yaml
 
   destination:
     server: https://kubernetes.default.svc

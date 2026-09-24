@@ -24,14 +24,11 @@ provider "aws" {
 }
 
 data "aws_eks_cluster" "qa" {
-  name = module.eks.cluster_name
-
-
+  name = "banking-qa-eks"
 }
 
 data "aws_eks_cluster_auth" "qa" {
-  name = module.eks.cluster_name
-
+  name = "banking-qa-eks"
 }
 
 provider "kubernetes" {

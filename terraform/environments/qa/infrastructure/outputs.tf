@@ -54,21 +54,21 @@ output "ecr_repository_arn" {
   value = module.ecr.repository_arn
 }
 
-# /* 
-# output "acm_certificate_arn" {
-#   description = "ACM certificate ARN"
-#   value       = module.acm.certificate_arn
-# }
 
-# output "acm_domain_name" {
-#   description = "ACM certificate domain name"
-#   value       = module.acm.domain_name
-# }
+output "acm_certificate_arn" {
+  description = "ACM certificate ARN"
+  value       = module.acm.certificate_arn
+}
 
-# output "acm_domain_validation_options" {
-#   description = "ACM DNS validation records"
-#   value       = module.acm.domain_validation_options
-# } */
+output "acm_domain_name" {
+  description = "ACM certificate domain name"
+  value       = module.acm.domain_name
+}
+
+output "acm_domain_validation_options" {
+  description = "ACM DNS validation records"
+  value       = module.acm.domain_validation_options
+} 
 
 
 # output "waf_web_acl_arn" {

@@ -1,5 +1,6 @@
-```bash
-#!/usr/bin/env bash
+#!/bin/bash
+
+echo 'Starting  apply...'
 
 set -euo pipefail
 
@@ -24,11 +25,11 @@ kubectl get nodes
 
 echo
 echo "3. Apply External Secrets ClusterSecretStore"
-kubectl apply -f k8s/external-secrets/cluster-secret-store.yaml
+kubectl apply -f  ../k8s/external-secrets/cluster-secret-store.yaml
 
 echo
 echo "4. Apply Argo CD Application"
-kubectl apply -f argocd/applications/banking-backend-qa.yaml
+kubectl apply -f  ../argocd/applications/banking-backend-qa.yaml
 
 echo
 echo "5. Force Argo CD refresh"
@@ -45,13 +46,13 @@ echo
 echo "7. Helm releases"
 helm list -A
 
-echo
-echo "8. Argo CD applications"
-argocd app list
+# echo
+# echo "8. Argo CD applications"
+# argocd app list
 
-echo
-echo "9. Banking Backend Argo CD application"
-argocd app get "$APP_NAME"
+# echo
+# echo "9. Banking Backend Argo CD application"
+# argocd app get "$APP_NAME"
 
 echo
 echo "10. Kubernetes pods"
@@ -97,4 +98,4 @@ echo
 echo "======================================"
 echo " Verification Complete"
 echo "======================================"
-```
+

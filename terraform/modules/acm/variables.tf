@@ -7,3 +7,10 @@ variable "environment" {
   type        = string
   description = "Environment name"
 }
+
+
+variable "zone_id" {
+  description = "Route53 Hosted Zone ID for domain validation"
+  type        = string
+
+}

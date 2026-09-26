@@ -1,19 +1,30 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
+
 metadata:
   name: banking-backend
   namespace: default
+
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-east-1:210006515453:certificate/79535e71-eae8-485e-9b33-f8297e7d0567"
+
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+
 spec:
   ingressClassName: alb
+
   rules:
-    - http:
+    - host: api.venkatesh.live
+      http:
         paths:
           - path: /
             pathType: Prefix
+
             backend:
               service:
                 name: banking-backend

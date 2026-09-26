@@ -56,13 +56,13 @@ module "rds" {
 
 
 
-# /* 
-# module "acm" {
-#   source = "../../modules/acm"
+module "acm" {
+  source = "../../../modules/acm"
 
-#   domain_name = "api.venkatesh.fun"
-#   environment = "qa"
-# } */
+  domain_name = "*.venkatesh.live"
+  environment = "qa"
+  zone_id     = var.zone_id
+}
 
 
 # module "waf" {

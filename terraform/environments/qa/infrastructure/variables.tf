@@ -10,3 +10,9 @@ variable "db_password" {
   sensitive   = true
 }
 
+variable "zone_id" {
+  description = "Route53 Hosted Zone ID for domain validation"
+  type        = string
+  default     = "Z0837378FXQAICHUIMDW"
+
+}

@@ -19,6 +19,8 @@ database:
 
 ingress:
   enabled: true
+  host: "api.venkatesh.live"
+  certificateArn: "arn:aws:acm:us-east-1:210006515453:certificate/79535e71-eae8-485e-9b33-f8297e7d0567"
 
 resources:
   requests:

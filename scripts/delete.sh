@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -euo pipefail
 
@@ -12,13 +12,13 @@ echo "======================================"
 echo
 echo "1. Delete Banking Backend Argo CD Application"
 kubectl delete \
-  -f argocd/applications/banking-backend-qa.yaml \
+  -f ../argocd/applications/banking-backend-qa.yaml \
   --ignore-not-found
 
 echo
 echo "2. Delete External Secrets ClusterSecretStore"
 kubectl delete \
-  -f k8s/external-secrets/cluster-secret-store.yaml \
+  -f ../k8s/external-secrets/cluster-secret-store.yaml \
   --ignore-not-found
 
 echo

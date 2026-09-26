@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: 210006515453.dkr.ecr.us-east-1.amazonaws.com/banking-qa-backend
-  tag: "cda8c379f22485539fbcd21d79ca2120a3e5abe1"
+  tag: "3e58c25850823e351e7148a1b3fad998ffc82915"
   pullPolicy: IfNotPresent
 
 service:

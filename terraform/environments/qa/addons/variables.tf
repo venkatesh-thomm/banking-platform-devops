@@ -3,3 +3,10 @@ variable "aws_region" {
   type        = string
   default     = "us-east-1"
 }
+
+variable "zone_id" {
+  description = "Route53 Hosted Zone ID for domain validation"
+  type        = string
+  default     = "Z0837378FXQAICHUIMDW"
+
+}

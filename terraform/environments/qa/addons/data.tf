@@ -5,3 +5,5 @@ data "terraform_remote_state" "infrastructure" {
     path = "../infrastructure/terraform.tfstate"
   }
 }
+
+

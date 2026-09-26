@@ -70,3 +70,21 @@ module "metrics_server" {
 
 
 }
+
+
+module "external_dns" {
+  source = "../../../modules/external-dns"
+
+  cluster_name = data.terraform_remote_state.infrastructure.outputs.eks_cluster_name
+  region       = var.aws_region
+
+  oidc_provider_arn = data.terraform_remote_state.infrastructure.outputs.eks_oidc_provider_arn
+  oidc_provider_url = data.terraform_remote_state.infrastructure.outputs.eks_oidc_provider_url
+
+  hosted_zone_id = var.zone_id
+  domain         = "venkatesh.live"
+
+  depends_on = [
+    data.terraform_remote_state.infrastructure
+  ]
+}

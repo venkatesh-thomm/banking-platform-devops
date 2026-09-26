@@ -68,7 +68,13 @@ output "acm_domain_name" {
 output "acm_domain_validation_options" {
   description = "ACM DNS validation records"
   value       = module.acm.domain_validation_options
-} 
+}
+
+
+output "eks_cluster_name" {
+  value = module.eks.cluster_name
+}
+
 
 
 # output "waf_web_acl_arn" {

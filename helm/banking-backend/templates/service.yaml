@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "banking-backend.fullname" . }}
+  labels:
+    app: {{ include "banking-backend.fullname" . }}
 spec:
   type: {{ .Values.service.type }}
 

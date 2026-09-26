@@ -88,3 +88,8 @@ module "external_dns" {
     data.terraform_remote_state.infrastructure
   ]
 }
+
+
+module "monitoring" {
+  source = "../../../modules/monitoring"
+}

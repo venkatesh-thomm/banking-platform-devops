@@ -1,0 +1,17 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+
+metadata:
+  name: {{ include "banking-backend.fullname" . }}
+
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "banking-backend.fullname" . }}
+
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+{{- end }}

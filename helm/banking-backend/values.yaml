@@ -1,0 +1,41 @@
+replicaCount: 2
+
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+containerPort: 8000
+
+database:
+  host: ""
+  port: "5432"
+  secretName: ""
+  secretKey: ""
+
+ingress:
+  enabled: false
+  host: ""
+  certificateArn: ""
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+metrics:
+  enabled: false
